@@ -18,9 +18,19 @@ if __name__ == "__main__":
     entries = int(sys.argv[1])
     dataset_fn = "mnm_dataset.csv"
 
+    num_rows = max(0, entries - 1)
+    chunk_size = 100000
+    counts_range = range(10, 101)
+
     with open(dataset_fn, mode='w') as dataset_file:
         dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         dataset_writer.writerow(fieldnames)
-        for i in range(1, entries):
-            dataset_writer.writerow([get_random_choice(states), get_random_choice(colors), random.randint(10, 100)])
+        remaining = num_rows
+        while remaining > 0:
+            current_chunk = min(remaining, chunk_size)
+            rand_states = random.choices(states, k=current_chunk)
+            rand_colors = random.choices(colors, k=current_chunk)
+            rand_counts = random.choices(counts_range, k=current_chunk)
+            dataset_writer.writerows(zip(rand_states, rand_colors, rand_counts))
+            remaining -= current_chunk
     print("Wrote %d lines in %s file" % (entries, dataset_fn))
