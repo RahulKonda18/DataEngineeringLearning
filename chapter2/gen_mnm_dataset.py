@@ -2,9 +2,6 @@ import sys
 import random
 import csv
 
-def get_random_choice(lst):
-  return random.choice(lst)
-
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: gen_mnm_dataset entries", file=sys.stderr)
@@ -22,5 +19,5 @@ if __name__ == "__main__":
         dataset_writer = csv.writer(dataset_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
         dataset_writer.writerow(fieldnames)
         for i in range(1, entries):
-            dataset_writer.writerow([get_random_choice(states), get_random_choice(colors), random.randint(10, 100)])
+            dataset_writer.writerow([random.choice(states), random.choice(colors), random.randint(10, 100)])
     print("Wrote %d lines in %s file" % (entries, dataset_fn))
