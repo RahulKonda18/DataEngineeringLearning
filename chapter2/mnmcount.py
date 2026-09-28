@@ -46,7 +46,7 @@ if __name__ == "__main__":
    # Note show() is an action, which will trigger the above
    # query to be executed.
    count_mnm_df.show(n=60, truncate=False)
-   print("Total Rows = %d" % (count_mnm_df.count()))
+   print(f"Total Rows = {count_mnm_df.count()}")
    # While the above code aggregated and counted for all 
    # the states, what if we just want to see the data for 
    # a single state, e.g., CA? 
