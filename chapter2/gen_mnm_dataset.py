@@ -15,7 +15,14 @@ if __name__ == "__main__":
     fieldnames = ['State', 'Color', 'Count']
 
 
-    entries = int(sys.argv[1])
+    try:
+        entries = int(sys.argv[1])
+        if entries <= 0:
+            raise ValueError("Entries must be a positive integer.")
+    except ValueError:
+        print(f"Error: Invalid argument for entries: '{sys.argv[1]}'. Must be a positive integer.", file=sys.stderr)
+        sys.exit(-1)
+
     dataset_fn = "mnm_dataset.csv"
 
     with open(dataset_fn, mode='w') as dataset_file:
