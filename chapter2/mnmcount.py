@@ -1,14 +1,43 @@
 # Import the necessary libraries.
 # Since we are using Python, import the SparkSession and related functions
 # from the PySpark module.
+import os
 import sys
 
 from pyspark.sql import SparkSession
+
+
+def validate_file_path(path: str) -> str:
+    """
+    Validates and resolves the provided file path.
+    Ensures the path exists, is a regular file, and resolves absolute path.
+    """
+    if not path:
+        raise ValueError("File path cannot be empty.")
+
+    abs_path = os.path.abspath(path)
+
+    if not os.path.exists(abs_path):
+        raise FileNotFoundError(f"Specified file does not exist: {path}")
+
+    if not os.path.isfile(abs_path):
+        raise ValueError(f"Specified path is not a file: {path}")
+
+    return abs_path
+
 
 if __name__ == "__main__":
    if len(sys.argv) != 2:
        print("Usage: mnmcount <file>", file=sys.stderr)
        sys.exit(-1)
+
+   # Validate input file path before initializing Spark Session
+   raw_file_path = sys.argv[1]
+   try:
+       mnm_file = validate_file_path(raw_file_path)
+   except (ValueError, FileNotFoundError) as e:
+       print(f"Error: {e}", file=sys.stderr)
+       sys.exit(1)
 
    # Build a SparkSession using the SparkSession APIs.
    # If one does not exist, then create an instance. There
@@ -17,8 +46,6 @@ if __name__ == "__main__":
      .builder
      .appName("PythonMnMCount")
      .getOrCreate())
-   # Get the M&M data set filename from the command-line arguments
-   mnm_file = sys.argv[1]
    # Read the file into a Spark DataFrame using the CSV
    # format by inferring the schema and specifying that the
    # file contains a header, which provides column names for comma-
