@@ -26,7 +26,8 @@ if __name__ == "__main__":
    mnm_df = (spark.read.format("csv") 
      .option("header", "true") 
      .option("inferSchema", "true") 
-     .load(mnm_file))
+     .load(mnm_file)
+     .cache())
 
    # We use the DataFrame high-level APIs. Note
    # that we don't use RDDs at all. Because some of Spark's 
